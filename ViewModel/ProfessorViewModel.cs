@@ -46,10 +46,19 @@ namespace XF.AplicativoFIAP.ViewModel
         public ObservableCollection<Professor> Professores { get; set; } = new ObservableCollection<Professor>();
 
         // UI Events
-
+        public OnAdicionarProfessorCMD OnAdicionarProfessorCMD { get; }
         public OnDeleteProfessorCMD OnDeleteProfessorCMD { get; }
 
         #endregion
+
+        public ProfessorViewModel()
+        {
+            OnAdicionarProfessorCMD = new OnAdicionarProfessorCMD(this);
+            OnDeleteProfessorCMD = new OnDeleteProfessorCMD(this);
+            CopiaListaProfessor = new List<Professor>();
+
+            Carregar();
+        }
 
         public void Carregar()
         {
@@ -77,6 +86,11 @@ namespace XF.AplicativoFIAP.ViewModel
                 if (index + 1 > Professores.Count || !Professores[index].Equals(item))
                     Professores.Insert(index, item);
             }
+        }
+
+        public async void AdicionarAsync(Professor paramProfessor)
+        {
+            await ProfessorRepository.PostProfessorSqlAzureAsync(paramProfessor);
         }
 
         public async void Remover()
@@ -117,6 +131,27 @@ namespace XF.AplicativoFIAP.ViewModel
         public void Execute(object parameter)
         {
             professorVM.Remover();
+        }
+    }
+
+    public class OnAdicionarProfessorCMD : ICommand
+    {
+        private ProfessorViewModel professorVM;
+        public OnAdicionarProfessorCMD(ProfessorViewModel paramVM)
+        {
+            professorVM = paramVM;
+        }
+        public event EventHandler CanExecuteChanged;
+        public void DeleteCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public bool CanExecute(object parameter)
+        {
+            if (parameter != null) return true;
+
+            return false;
+        }
+        public void Execute(object parameter)
+        {
+            professorVM.AdicionarAsync(parameter as Professor);
         }
     }
 
