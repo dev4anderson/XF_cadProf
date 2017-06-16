@@ -25,12 +25,13 @@ namespace XF.AplicativoFIAP.View
 
         private void OnNovo(object sender, EventArgs e)
         {
-
+            App.ProfessorVM.Selecionado = new Model.Professor();
+            Navigation.PushAsync(new NovoProfessor() { BindingContext = App.ProfessorVM });
         }
 
         private void OnEditar(object sender, EventArgs e)
         {
-
+            Navigation.PushAsync(new NovoProfessor() { BindingContext = App.ProfessorVM });
         }
 
         private void OnSair(object sender, EventArgs e)
