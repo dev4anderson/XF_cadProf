@@ -16,5 +16,10 @@ namespace XF.AplicativoFIAP.View
         {
             InitializeComponent();
         }
+
+        public void OnCancelar(object sender, EventArgs args)
+        {
+            Navigation.PopAsync();
+        }
     }
 }
